@@ -4,5 +4,8 @@ YEAR=2025
 DAY=$1
 
 curl -s \
-  --cookie "session=$AOC_SESSION" \
-  "https://adventofcode.com/$YEAR/day/$DAY/input"
+  --cookie "session=$AOC" \
+  "https://adventofcode.com/$YEAR/day/$DAY/input" \
+  > Day$DAY/input.txt
+
+
