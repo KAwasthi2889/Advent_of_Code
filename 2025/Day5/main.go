@@ -23,7 +23,7 @@ func main() {
 	part1 := true
 
 	pairs := []Pair{}
-	count := 0
+	var count int64
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -45,15 +45,12 @@ func main() {
 			pairs = append(pairs, Pair{n1, n2})
 
 		} else {
-			num, err := strconv.ParseInt(line, 10, 64)
-			if err != nil {
-				panic(err)
-			}
-
-			if search(pairs, 0, len(pairs)-1, num) { // binary search, true if found
-				count++
-			}
+			break
 		}
+	}
+
+	for _, p := range pairs {
+		count += p.b - p.a + 1
 	}
 
 	fmt.Println(count)
@@ -78,24 +75,6 @@ func combine(pairs []Pair) []Pair {
 		}
 	}
 	return new
-}
-
-func search(pairs []Pair, low, high int, key int64) bool {
-	if low > high {
-		return false
-	}
-
-	mid := (low + high) / 2
-
-	if pairs[mid].a <= key {
-		if pairs[mid].b >= key {
-			return true
-		} else {
-			return search(pairs, mid+1, high, key)
-		}
-	} else {
-		return search(pairs, low, mid-1, key)
-	}
 }
 
 func mergeSort(pairs []Pair, low, high int) {
