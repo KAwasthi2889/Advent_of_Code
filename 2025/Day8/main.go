@@ -9,12 +9,6 @@ import (
 	"strings"
 )
 
-const (
-	// Number of connections to be made
-	CONNECTIONS = 1000
-	NUM         = 3
-)
-
 func main() {
 	file, err := os.Open("input.txt")
 	if err != nil {
@@ -67,10 +61,13 @@ func main() {
 		dsu.size[i] = 1
 	}
 
-	for a := 0; a < CONNECTIONS && len(h) > 0; a++ {
+	last_i, last_j := 0, 0
+
+	for len(h) > 0 {
 		i, j := h.Pop()
 		// If they have same root, they are in same circuit. If not, mearge them
 		if ri, rj := dsu.root(i), dsu.root(j); ri != rj {
+			last_i, last_j = coordinates[i].x, coordinates[j].x
 			if dsu.size[ri] >= dsu.size[rj] {
 				// root of j will have root of i as parent
 				dsu.parent[rj] = ri
@@ -82,30 +79,8 @@ func main() {
 			}
 		}
 	}
-	/*
-		for i, parent := range dsu.parent {
-			if i == parent {
-				fmt.Printf("%d: %d\n", i, dsu.size[i])
-			}
-		}
-	*/
 
-	ans := 1
-	used := map[int]bool{}
-	// Find the NUM largest sizes of circuits on roots
-	for k := NUM; k > 0; k-- {
-		index, largest := 0, 0
-		for i, size := range dsu.size {
-			if dsu.parent[i] == i && !used[i] && size > largest { // If it is root, only then consider size
-				index = i
-				largest = size
-			}
-		}
-		used[index] = true
-		ans *= largest
-	}
-
-	fmt.Println(ans)
+	fmt.Println(last_i * last_j)
 }
 
 type Disjoint struct {
